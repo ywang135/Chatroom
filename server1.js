@@ -6,6 +6,8 @@ var engines = require('consolidate');
 app.engine('html', engines.hogan); // tell Express to run .html files through Hogan
 app.set('views', __dirname+ "/views"); // tell Express where to find templates
 
+app.use(express.bodyParser());
+
 function generateRoomIdentifier() {
     var chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
     var result = '';
@@ -38,11 +40,11 @@ app.post('/:roomName',function(request,response){
     var q = conn.query(sql,[nickname], function(error, result){
     	if(error){
     		console.log("Wrong sql!");
-            response.render('room.html', {roomName: name}, {error_info:"Wrong SQL"});
+            response.render('room.html', {roomName: roomName, error_info:"Wrong SQL"});
     	}
     	else{
             if(q.rows.length>0){
-                response.render('room.html', {roomName: name}, {error_info:"user name exist"});
+                response.render('room.html', {roomName: roomName, error_info:"user name exist"});
             }
             else{
                 
