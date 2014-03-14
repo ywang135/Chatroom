@@ -61,7 +61,7 @@ function readMessage() {
 			var data = JSON.parse(content);  
 			for(var i = 0; i < data.length; i++){
                 console.log("hello"+ data[i].body);
-				var display = '<strong>' + data[i].nickname + ": " + data[i].time +'</strong><br><p>' + data[i].body + '</p>';
+				var display = '<strong>' + data[i].nickname + ": " +'</strong><strong>' + data[i].body + '</stong>';
         
 				if(!feedSet.contains(data[i].id)){
 					feedSet.add(data[i].id);

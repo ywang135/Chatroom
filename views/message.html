@@ -9,11 +9,13 @@
   </head>
   <body>
 	<form method="POST" action="/{{roomName}}/messages" id="messageForm">
-		<input type="text" name="message" id="messagefield">
+        <div id= "form">
+		<strong>Messages: </strong><input type="text" name="message" id="messagefield">
     	<input type="hidden" name="nickName" id="nicknamefield" value = "{{nickName}}">
     	<input type="submit" value="Submit">
+        </div>
 	</form>
-	<ul id="topic">
+	<ul id="topic">   
     </ul>
    </body>
 </html>
