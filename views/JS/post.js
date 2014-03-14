@@ -35,7 +35,7 @@ function StringSet() {
 }
 var feedSet = new StringSet();
 function appendingText() {
-  nIntervId = setInterval(readMessage, 5000);
+  nIntervId = setInterval(readMessage, 100);
 }
 function myStopFunction()
 {
@@ -76,9 +76,6 @@ function readMessage() {
 			if(request.status == 403)	{
 				alert("You forgot something! Check it again! ");
 			}
-			// something went wrong, check the request status
-			// hint: 403 means Forbidden, maybe you forgot your username?
-								
 		}
 	}, false);
 	request.send(null);
@@ -91,6 +88,7 @@ function sendMessage(e) {
     var fd = new FormData();
     fd.append('nickName', document.getElementById('nicknamefield').value);
     fd.append('message', document.getElementById('messagefield').value);
+    document.getElementById('messagefield').value="";
     // send it to the server
     var req = new XMLHttpRequest();
     req.open('POST', '/' + meta('roomName') + '/messages', true);

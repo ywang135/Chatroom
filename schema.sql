@@ -13,7 +13,8 @@ CREATE TABLE room (
 );
 
 CREATE TABLE users (
-	name TEXT PRIMARY KEY ,
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+	name TEXT,
     roomname TEXT,
     FOREIGN KEY(roomname) REFERENCES room (name)
 );

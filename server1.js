@@ -37,17 +37,26 @@ app.get('/', function(request,response){
     
 });
 app.post('/',function(request,response){
-    
-	var name = generateRoomIdentifier();
-	var sql = 'INSERT INTO room VALUES ($1, $2)';
-	var q = conn.query(sql, [name, 0], function(error,result) {
-		if(error){
-			name = generateRoomIdentifier();
-		}
-		else{
-			response.render('room.html', {roomName: name});
-		}
-    });
+    var flag = true;
+    while(flag){
+        console.log("there");
+        var i = 0;
+        var name = generateRoomIdentifier();
+        var sql1 = 'SELECT name FROM room WHERE name=$1';console.log(i);
+        var q = conn.query(sql1, [name]).on('row', function(row){
+            i++;
+        });console.log(i);
+        q.on('end', function(){
+           
+	       if(i === 0){
+                flag = false;
+                response.render('room.html', {roomName: name});
+	            var sql = 'INSERT INTO room VALUES ($1, $2)';
+	            var q = conn.query(sql, [name, 0]);
+                q.on('error',console.error);
+           }
+        });
+    }
 });
 app.get('/:roomName',function(request,response){
     var i = 0;
@@ -58,6 +67,7 @@ app.get('/:roomName',function(request,response){
     });
     q.on('end', function(){
     if(i>0){
+         
 		  response.render('room.html', {roomName: name});
 	   }
 	   else{
@@ -68,20 +78,23 @@ app.get('/:roomName',function(request,response){
 });
 app.post('/:roomName',function(request,response){
     var nickname = request.body.nickname;
-    
     var roomName = request.params.roomName;
-	var sql = 'INSERT INTO users VALUES ($1, $2)';
-    var q = conn.query(sql,[nickname, roomName], function(error, result){
-    	if(error){
-            console.log("if: "+nickname);
-            response.render('room.html', {roomName: roomName, error_info:"user name exist"});
-    	}
-    	else{
-            console.log("else: "+nickname);
+    var i = 0;
+    var sql1 = 'SELECT name FROM users WHERE roomname=$1, name=$2';
+    var q = conn.query(sql1, [roomName, nickname]).on('row', function(row){
+        i++;
+    });
+    q.on('end', function(){
+       if(i > 0){
+            response.render('room.html', {roomName: roomName, error_info:"Nickname exist"});
+       }
+       else{
             var newsql = 'UPDATE room SET numofPeople=numofPeople+1 WHERE name = $1';
             var q1 = conn.query(newsql, [roomName]).on('error',console.error);
+            var sql = 'INSERT INTO users VALUES ($1, $2)';
+            var q = conn.query(sql,[nickname, roomName]).on('error',console.error);
             response.render('message.html', {roomName: request.params.roomName, nickName: nickname});
-    	}
+       }
     });
 
 });
