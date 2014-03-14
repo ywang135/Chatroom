@@ -77,6 +77,19 @@ app.post('/:roomName/messages',function(request,response){
     console.log('made it!');
 
 });
+app.get('/:roomName/messages.json', function(request, response){
+    var name = request.params.roomName;
+    var sql = 'SELECT nickname, body, time FROM messages WHERE roomname=$1';
+    var q = conn.query(sql, [name]);
+    var messages = [];
+    var i = 0;
+    q.on('row', function(row){
+        messages[i].nickname = row.nickname;
+        messages[i].body = row.body;
+        messages[i].time = row.time;
+    });
+    response.json(messages);
+});
 /*	var name = generateRoomIdentifier();
 	var sql = 'INSERT INTO room VALUES ($1, $2)';
 	var q = conn.query(sql, [name, 0], function(error,result) {
