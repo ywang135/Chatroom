@@ -42,9 +42,9 @@ app.get('/:roomName',function(request,response){
         response.render('room.html', {roomName: name});
     }
     else{
-        response.render('index.html', error_info:"No room name, you can create a new room here!");
+        response.render('index.html', {error_info:"No room name, you can create a new room here!"});
     }
-}
+});
 app.post('/:roomName',function(request,response){
     var nickname = request.body.nickname;
     var roomName = request.params.roomName;
