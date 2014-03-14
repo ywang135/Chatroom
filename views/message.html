@@ -6,7 +6,7 @@
      <meta name="nickName" content="{{nickName}}">
   </head>
   <body>
-	<form id="messageForm">
+	<form method="POST" action={{roomName}}/messages id="messageForm">
 		<input type="text" name="message" id="messagefield">
     	<input type="hidden" name="nickName" id="nicknamefield" value = "{{nickName}}">
     	<input type="submit" value="Submit">
