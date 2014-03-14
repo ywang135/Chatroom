@@ -83,14 +83,18 @@ app.post('/:roomName',function(request,response){
 
 });
 app.post('/:roomName/messages',function(request,response){
-    console.log("- Post req received");
 	var name = request.params.roomName;   // 'ABC123'
    	var nickname = request.body.nickName; // 'Miley'
    	var message = request.body.message;
     var time = new Date();
     conn.query('INSERT INTO messages(roomname, nickname, body, time) VALUES ($1, $2, $3, $4)', [name, nickname, message, time]).on('error',console.error);	
-    //response.render('message.html', {roomName: request.params.roomName, nickName: nickname});
+    response.render('message.html', {roomName: request.params.roomName, nickName: nickname});
+    
+    
+});
+app.get('/:roomName/messages',function(request,response){
     var sql = 'SELECT id, nickname, body, time FROM messages WHERE roomname=$1';
+    var name = request.params.roomName;
     var q = conn.query(sql, [name]);
     var messages = [];
     q.on('row', function(row){
@@ -104,10 +108,8 @@ app.post('/:roomName/messages',function(request,response){
     });
     q.on('end', function(){
         response.json(messages);
-
     });
 });
-
 app.get('/:roomName/messages.json', function(request, response){
     var name = request.params.roomName;
     var sql = 'SELECT id, nickname, body, time FROM messages WHERE roomname=$1';

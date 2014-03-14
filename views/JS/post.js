@@ -35,7 +35,7 @@ function StringSet() {
 }
 var feedSet = new StringSet();
 function appendingText() {
-  nIntervId = setInterval(readMessage, 100);
+  nIntervId = setInterval(readMessage, 5000);
 }
 function myStopFunction()
 {
@@ -50,10 +50,9 @@ function meta(name) {
 
 var roomName = meta('roomName');
 function readMessage() {
-    console.log("there!");
 	var request = new XMLHttpRequest();
 	// specify the HTTP method, URL, and asynchronous flag
-	request.open('POST', '/' + meta('roomName') + '/messages');
+	request.open('GET', '/' + meta('roomName') + '/messages', true);
 	// add an event handler
 	request.addEventListener('load', function(e){
 		if (request.status == 200) {
@@ -62,13 +61,14 @@ function readMessage() {
 			var data = JSON.parse(content);  
 			for(var i = 0; i < data.length; i++){
                 console.log("hello"+ data[i].body);
-				var display = '<strong>' + data.nickname + ": " + data.time +'</strong><br><p>' + data.body + '</p>';
+				var display = '<strong>' + data[i].nickname + ": " + data[i].time +'</strong><br><p>' + data[i].body + '</p>';
         
 				if(!feedSet.contains(data[i].id)){
 					feedSet.add(data[i].id);
 					var li = document.createElement('LI');
 					li.innerHTML = display;
 					var ul = document.getElementById('topic');
+                    console.log('ul: ' + ul);
 					ul.insertBefore(li, ul.childNodes[0]);
 				}
 			}
@@ -89,10 +89,8 @@ function sendMessage(e) {
 
     // create a FormData object from our form
     var fd = new FormData();
-    
-    fd.append('nickname', document.getElementById('nicknameField').value);
-    fd.append('message', document.getElementById('messageField').value);
-
+    fd.append('nickname', document.getElementById('nicknamefield').value);
+    fd.append('message', document.getElementById('messagefield').value);
     // send it to the server
     var req = new XMLHttpRequest();
     req.open('POST', '/' + meta('roomName') + '/messages', true);
