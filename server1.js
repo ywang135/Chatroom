@@ -77,77 +77,20 @@ app.post('/:roomName/messages',function(request,response){
     console.log('made it!');
 
 });
+
 app.get('/:roomName/messages.json', function(request, response){
     var name = request.params.roomName;
     var sql = 'SELECT nickname, body, time FROM messages WHERE roomname=$1';
     var q = conn.query(sql, [name]);
     var messages = [];
-    var i = 0;
     q.on('row', function(row){
-        messages[i].nickname = row.nickname;
-        messages[i].body = row.body;
-        messages[i].time = row.time;
+        var temp;
+        temp.id = row.id;
+        temp.nickname = row.nickname;
+        temp.body = row.body;
+        temp.time = row.time;
+        messages.push(temp);
     });
     response.json(messages);
 });
-/*	var name = generateRoomIdentifier();
-	var sql = 'INSERT INTO room VALUES ($1, $2)';
-	var q = conn.query(sql, [name, 0], function(error,result) {
-		if(error){
-			name = generateRoomIdentifier();
-			console.log("hello!");
-		}
-		else{
-			console.log(name);
-			response.render('room.html', {roomName: name});
-		}
-    });
-});
-app.get('/:roomName', function(request,response){
-	response.render('room.html', {roomName:request.params.roomName});
-});
-app.post('/:roomName', function(request,response){
-	console.log("1:"+request.body.nickname);
-});
-app.get('/:roomName/messages',function(request,response){
-	console.log("2:"+request.body.nickname);
-
-});
-app.post('/:roomName/messages',function(request,response){
-	console.log("3:"+request.body.nickname);
-
-});
-var name="";
-var nickname="";
-app.get('/', function(request,response){
-	response.render('index.html');
-	name = generateRoomIdentifier();
-	var sql = 'INSERT INTO room VALUES ($1, $2)';
-	var q = conn.query(sql, [name, 0], function(error,result) {
-		if(error){
-			name = generateRoomIdentifier();
-			console.log("hello!");
-		}
-    });
-});
-app.post('/', function(request,response){
-	response.render('room.html', {roomName:name});
-});
-app.get('/:roomName', function(request,response){
-	response.render('messages.html', {
-		roomName:name,
-		nickName:nickname;
-	});
-});
-app.post('/:roomName', function(request,response){
-	var sql = 'SELECT nickname FROM message WHERE nickname=$1';
-    var q = conn.query(sql,[nickname], function(error, result){
-    	if(error){
-    		console.log("Nickname has already existed!");
-    	}
-    	else{
-    	}
-    });
-});
-*/
 app.listen(8080);

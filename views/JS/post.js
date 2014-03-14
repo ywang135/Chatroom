@@ -3,7 +3,37 @@
     An implementation of the MileyFeed project.
 */
 var nIntervId;
-
+function StringSet() {
+    var setObj = {}, val = {};
+	var length = 0;
+    this.add = function(str) {
+        setObj[str] = val;
+		length++;
+    };
+    this.contains = function(str) {
+        return setObj[str] === val;
+    };
+    this.remove = function(str) {
+        delete setObj[str];
+		length--;
+		if(length < 0){
+			alert("Not enough element!");
+		}
+    };
+    this.values = function() {
+        var values = [];
+        for (var i in setObj) {
+            if (setObj[i] === val) {
+                values.push(i);
+            }
+        }
+        return values;
+    };
+	this.size = function(){
+		return length;
+	}
+}
+var feedSet = new StringSet();
 function appendingText() {
   nIntervId = setInterval(readMessage, 5000);
 }
@@ -13,15 +43,13 @@ function myStopFunction()
 }
 function readMessage() {
 	var request = new XMLHttpRequest();
-	
 	// specify the HTTP method, URL, and asynchronous flag
-	req.open('POST', '/' + meta('roomName') + '/messages', true);
-	
+	request.open('POST', '/' + meta('roomName') + '/messages', true);
 	// add an event handler
 	request.addEventListener('load', function(e){
 		if (request.status == 200) {
 			// do something with the loaded content
-		   var content = request.responseText;
+		    var content = request.responseText;
 			var data = JSON.parse(content);  
 			for(var i = 0; i < data.length; i++){
 				var display;
