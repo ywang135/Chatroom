@@ -39,21 +39,22 @@ app.get('/', function(request,response){
 app.post('/',function(request,response){
     var flag = true;
     while(flag){
-        console.log("there");
         var i = 0;
         var name = generateRoomIdentifier();
-        var sql1 = 'SELECT name FROM room WHERE name=$1';console.log(i);
+        var sql1 = 'SELECT name FROM room WHERE name=$1';
         var q = conn.query(sql1, [name]).on('row', function(row){
             i++;
-        });console.log(i);
+        });
         q.on('end', function(){
            
-	       if(i === 0){
+	       if(i == 0){
+               
+                console.log("there");
                 flag = false;
-                response.render('room.html', {roomName: name});
 	            var sql = 'INSERT INTO room VALUES ($1, $2)';
 	            var q = conn.query(sql, [name, 0]);
                 q.on('error',console.error);
+                response.render('room.html', {roomName: name});
            }
         });
     }
