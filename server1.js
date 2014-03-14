@@ -18,23 +18,19 @@ function generateRoomIdentifier() {
 app.get('/', function(request,response){
 	response.render('index.html');
     var html = '<!DOCTYPE html>\n' +
-                '<html>\n' +
-<head>
-    <title>My Chatroom</title>
-    <meta name="errorinfo" content="{{error_info}}">
-</head>
-<body>
-    <h1>{{error_info}}</h1>
-    <form method="POST" id="roombutton">
-    	<input type="submit" value="Create a new room!">
-	</form>
-</body>
-</html>
-	/*var sql = "SELECT DISTINCT roomname FROM messages WHERE time >= strftime('%s','now') - 300";
+                '<html>\n' + '<head>\n' + '<title>My Chatroom</title>\n'+
+                '</head>\n' +
+                '<body>\n' +
+                '<form method="POST" id="roombutton">\n' +
+    	        '<input type="submit" value="Create a new room!">\n' +
+	            '</form>\n';
+	var sql = "SELECT DISTINCT roomname FROM messages WHERE time >= strftime('%s','now') - 300";
     var q = conn.query(sql);
     q.on('row', function(row){
-        response.write("Room Name: "+row.roomname);
-    });*/
+        html += '<a href="//'+row.roomname+'">'+room.roomname+'</a>';
+    });
+    html += '</body>\n' + '<html>\n';
+    response.write(html);
 });
 app.post('/',function(request,response){
     
