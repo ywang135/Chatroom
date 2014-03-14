@@ -30,33 +30,24 @@ app.get('/', function(request,response){
     q.on('row', function(row){
         html += '<a href="/'+row.roomname+'">'+row.roomname+'</a><br>';
     });
-    q.on('end', function(row){
+    q.on('end', function(){
         html += '</body>\n' + '<html>\n';
         response.write(html);
     });
     
 });
 app.post('/',function(request,response){
-    var flag = true;
-    while(flag){
-        var i = 0;
-        var name = generateRoomIdentifier();
-        var sql1 = 'SELECT name FROM room WHERE name=$1';
-        var q = conn.query(sql1, [name]).on('row', function(row){
-            i++;
-        });
-        q.on('end', function(row){
-            console.log(i==0);
-	       if(i == 0){
-                console.log("there");
-                flag = false;
-	            var sql = 'INSERT INTO room VALUES ($1, $2)';
-	            var q1 = conn.query(sql, [name, 0]);
-                q1.on('error',console.error);
-                response.render('room.html', {roomName: name});
-           }
-        });
-    }
+    var name = generateRoomIdentifier();
+    var sql = 'INSERT INTO room VALUES ($1, $2)';
+    var q = conn.query(sql, [name, 0]);
+    q.on('error',function(error,result){
+        if(error){
+            name = generateRoomIdentifier();
+        }
+        else{
+            response.render('room.html', {roomName: name});
+        }
+    });
 });
 app.get('/:roomName',function(request,response){
     var i = 0;
