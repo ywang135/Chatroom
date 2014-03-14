@@ -17,6 +17,19 @@ function generateRoomIdentifier() {
 }
 app.get('/', function(request,response){
 	response.render('index.html');
+    var html = '<!DOCTYPE html>\n' +
+                '<html>\n' +
+<head>
+    <title>My Chatroom</title>
+    <meta name="errorinfo" content="{{error_info}}">
+</head>
+<body>
+    <h1>{{error_info}}</h1>
+    <form method="POST" id="roombutton">
+    	<input type="submit" value="Create a new room!">
+	</form>
+</body>
+</html>
 	/*var sql = "SELECT DISTINCT roomname FROM messages WHERE time >= strftime('%s','now') - 300";
     var q = conn.query(sql);
     q.on('row', function(row){
@@ -78,7 +91,6 @@ app.post('/:roomName/messages',function(request,response){
    	var message = request.body.message;
     var time = new Date();
     conn.query('INSERT INTO messages(roomname, nickname, body, time) VALUES ($1, $2, $3, $4)', [name, nickname, message, time]).on('error',console.error);	
-    response.redirect('/' + name);
     console.log('made it!');
 
 });
