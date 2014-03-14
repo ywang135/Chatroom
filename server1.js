@@ -17,7 +17,7 @@ function generateRoomIdentifier() {
 }
 app.get('/', function(request,response){
 	response.render('index.html');
-	var sql = 'SELECT DISTINCT room FROM messages WHERE time >= strftime('%s','now') - 300';
+	var sql = "SELECT DISTINCT roomname FROM messages WHERE time >= strftime('%s','now') - 300";
     var q = conn.query(sql);
     q.on('row', function(row){
         response.write("Room Name: "+row.roomname);
@@ -46,6 +46,7 @@ app.get('/:roomName',function(request,response){
         i++;
     });
     q.on('end', function(){
+        response.json(messages);
         if(i>0){
 		  response.render('room.html', {roomName: name});
 	   }
@@ -98,7 +99,10 @@ app.get('/:roomName/messages.json', function(request, response){
         messages.push(temp);
         console.log(messages[0].body);
     });
-    response.json(messages);
+    q.on('end', function(){
+      response.json(messages);
+
+    });
     /*var messages = [{nickname: 'Miley', body: 'It\'s our party we can do what we want'},{nickname: 'Miley', body: 'It\'s our party we can do what we want'}];
     response.json(messages);*/
 });
