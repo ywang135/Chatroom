@@ -38,7 +38,8 @@ app.get('/:roomName',function(request,response){
     var name = request.params.roomName;
     var sql = 'SELECT name FROM room WHERE name = $1';
     var q = conn.query(sql,[name]).on('error',console.error);
-    if(q.rows.length > 0){
+    console.log(q._rows);
+    if(q._rows.length > 0){
         response.render('room.html', {roomName: name});
     }
     else{
@@ -55,7 +56,7 @@ app.post('/:roomName',function(request,response){
             response.render('room.html', {roomName: roomName, error_info:"user name exist"});
     	}
     	else{
-            var newsql = 'UPDATE room SET numofPeople=numofPeople+1 WHERE room = $1';
+            var newsql = 'UPDATE room SET numofPeople=numofPeople+1 WHERE name = $1';
             var q1 = conn.query(newsql, [roomName]).on('error',console.error);
             response.render('message.html', {roomName: request.params.roomName, nickName: nickname});
     	}
