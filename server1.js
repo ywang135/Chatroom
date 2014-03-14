@@ -17,11 +17,11 @@ function generateRoomIdentifier() {
 }
 app.get('/', function(request,response){
 	response.render('index.html');
-	var sql = "SELECT DISTINCT roomname FROM messages WHERE time >= strftime('%s','now') - 300";
+	/*var sql = "SELECT DISTINCT roomname FROM messages WHERE time >= strftime('%s','now') - 300";
     var q = conn.query(sql);
     q.on('row', function(row){
         response.write("Room Name: "+row.roomname);
-    });
+    });*/
 });
 app.post('/',function(request,response){
     
@@ -46,8 +46,7 @@ app.get('/:roomName',function(request,response){
         i++;
     });
     q.on('end', function(){
-        response.json(messages);
-        if(i>0){
+    if(i>0){
 		  response.render('room.html', {roomName: name});
 	   }
 	   else{
