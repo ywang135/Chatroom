@@ -37,14 +37,16 @@ app.post('/',function(request,response){
 app.get('/:roomName',function(request,response){
     var name = request.params.roomName;
     var sql = 'SELECT name FROM room WHERE name = $1';
-    var q = conn.query(sql,[name]).on('error',console.error);
-    console.log(q._rows);
-    if(q._rows.length > 0){
-        response.render('room.html', {roomName: name});
-    }
-    else{
-        response.render('index.html', {error_info:"No room name, you can create a new room here!"});
-    }
+    var q = conn.query(sql,{$1:name})
+    q.on('row',function(row){
+        if(row.name){
+            response.render('room.html', {roomName: name});
+        }
+        else{
+            response.render('index.html', {error_info:"No room name, you can create a new room here!"});
+        }
+            
+    });
 });
 app.post('/:roomName',function(request,response){
     var nickname = request.body.nickname;
