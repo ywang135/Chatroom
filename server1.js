@@ -45,15 +45,14 @@ app.post('/',function(request,response){
         var q = conn.query(sql1, [name]).on('row', function(row){
             i++;
         });
-        q.on('end', function(){
-           
+        q.on('end', function(row){
+            console.log(i==0);
 	       if(i == 0){
-               
                 console.log("there");
                 flag = false;
 	            var sql = 'INSERT INTO room VALUES ($1, $2)';
-	            var q = conn.query(sql, [name, 0]);
-                q.on('error',console.error);
+	            var q1 = conn.query(sql, [name, 0]);
+                q1.on('error',console.error);
                 response.render('room.html', {roomName: name});
            }
         });
