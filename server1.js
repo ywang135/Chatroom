@@ -16,7 +16,6 @@ function generateRoomIdentifier() {
     return result;
 }
 app.get('/', function(request,response){
-	response.render('index.html');
     var html = '<!DOCTYPE html>\n' +
                 '<html>\n' + '<head>\n' + '<title>My Chatroom</title>\n'+
                 '</head>\n' +
@@ -27,7 +26,8 @@ app.get('/', function(request,response){
 	var sql = "SELECT DISTINCT roomname FROM messages WHERE time >= strftime('%s','now') - 300";
     var q = conn.query(sql);
     q.on('row', function(row){
-        html += '<a href="//'+row.roomname+'">'+room.roomname+'</a>';
+        console.log(row);
+        html += '<a href="'+row.roomname+'">'+row.roomname+'</a>';
     });
     html += '</body>\n' + '<html>\n';
     response.write(html);
