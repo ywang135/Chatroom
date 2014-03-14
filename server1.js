@@ -32,6 +32,25 @@ app.post('/',function(request,response){
 		}
     });
 });
+app.post('/:roomName',function(request,response){
+    var nickname = request.body.nickname;
+	var sql = 'SELECT nickname FROM message WHERE nickname=$1';
+    var q = conn.query(sql,[nickname], function(error, result){
+    	if(error){
+    		console.log("Wrong sql!");
+            response.render('room.html', {roomName: name}, {error_info:"Wrong SQL"});
+    	}
+    	else{
+            if(q.rows.length>0){
+                response.render('room.html', {roomName: name}, {error_info:"user name exist"});
+            }
+            else{
+                
+            }
+    	}
+    });
+
+});
 /*	var name = generateRoomIdentifier();
 	var sql = 'INSERT INTO room VALUES ($1, $2)';
 	var q = conn.query(sql, [name, 0], function(error,result) {
