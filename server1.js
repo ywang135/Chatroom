@@ -36,19 +36,14 @@ app.post('/',function(request,response){
 });
 app.post('/:roomName',function(request,response){
     var nickname = request.body.nickname;
-	var sql = 'SELECT nickname FROM message WHERE nickname=$1';
+	var sql = 'INSERT INTO users VALUES ($1)';
     var q = conn.query(sql,[nickname], function(error, result){
     	if(error){
-    		console.log("Wrong sql!");
-            response.render('room.html', {roomName: roomName, error_info:"Wrong SQL"});
+    		console.log("exist!");
+            response.render('room.html', {roomName: roomName, error_info:"user name exist"});
     	}
     	else{
-            if(q.rows.length>0){
-                response.render('room.html', {roomName: roomName, error_info:"user name exist"});
-            }
-            else{
-                
-            }
+            response.render('message.html', {roomName: roomName, nickName: nickname});
     	}
     });
 
