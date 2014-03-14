@@ -18,7 +18,19 @@ app.get('/', function(request,response){
 	
 });
 app.post('/',function(request,response){
-	response.render('room.html');
+    
+	var name = generateRoomIdentifier();
+	var sql = 'INSERT INTO room VALUES ($1, $2)';
+	var q = conn.query(sql, [name, 0], function(error,result) {
+		if(error){
+			name = generateRoomIdentifier();
+			console.log("hello!");
+		}
+		else{
+			console.log(name);
+			response.render('room.html', {roomName: name});
+		}
+    });
 });
 /*	var name = generateRoomIdentifier();
 	var sql = 'INSERT INTO room VALUES ($1, $2)';
