@@ -34,18 +34,41 @@ app.post('/',function(request,response){
 		}
     });
 });
+app.get('/:roomName',function(request,response){
+    var name = request.params.roomName;
+    var sql = 'SELECT name FROM room WHERE name = $1';
+    var q = conn.query(sql,[name]).on('error',console.error);
+    if(q.rows.length > 0){
+        response.render('room.html', {roomName: name});
+    }
+    else{
+        response.render('index.html', error_info:"No room name, you can create a new room here!");
+    }
+}
 app.post('/:roomName',function(request,response){
     var nickname = request.body.nickname;
+    var roomName = request.params.roomName;
 	var sql = 'INSERT INTO users VALUES ($1)';
     var q = conn.query(sql,[nickname], function(error, result){
     	if(error){
     		console.log("exist!");
-            response.render('room.html', {roomName: request.params.roomName, error_info:"user name exist"});
+            response.render('room.html', {roomName: roomName, error_info:"user name exist"});
     	}
     	else{
+            var newsql = 'UPDATE room SET numofPeople=numofPeople+1 WHERE room = $1';
+            var q1 = conn.query(newsql, [roomName]).on('error',console.error);
             response.render('message.html', {roomName: request.params.roomName, nickName: nickname});
     	}
     });
+
+});
+app.post('/:roomName/messages',function(request,response){
+	var name = request.params.roomName;   // 'ABC123'
+   	var nickname = request.body.nickName; // 'Miley'
+   	var message = request.body.message;
+    var time = new Date();
+    conn.query('INSERT INTO messages(roomname, nickname, body, time) VALUES ($1, $2, $3, $4)', [name, nickname, message, time]).on('error',console.error);	
+    console.log('made it!');
 
 });
 /*	var name = generateRoomIdentifier();
