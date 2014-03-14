@@ -13,13 +13,12 @@ function generateRoomIdentifier() {
     	result += chars.charAt(Math.floor(Math.random() * chars.length));
     return result;
 }
-
 app.get('/', function(request,response){
 	response.render('index.html');
 	
 });
 app.post('/',function(request,response){
-	response.redirect('room.html');
+	response.render('room.html');
 });
 /*	var name = generateRoomIdentifier();
 	var sql = 'INSERT INTO room VALUES ($1, $2)';
