@@ -73,11 +73,26 @@ function readMessage() {
 	}, false);
 	request.send(null);
 }
-/*window.addEventListener('load', function(){
+window.addEventListener('load', function(){
     appendingText();
-}, false);*/
+}, false);
+function sendMessage(e) {
+    // prevent the page from redirecting
+    e.preventDefault();
+
+    // create a FormData object from our form
+    var fd = new FormData();
+    
+    fd.append('nickname', document.getElementById('nicknameField').value);
+    fd.append('message', document.getElementById('messageField').value);
+
+    // send it to the server
+    var req = new XMLHttpRequest();
+    req.open('POST', '/' + meta('roomName') + '/messages', true);
+    req.send(fd);
+}
 window.addEventListener('load', function(){
     var messageForm = document.getElementById('messageForm');
-    messageForm.addEventListener('submit', appendingText, false);
+    messageForm.addEventListener('submit', sendMessage false);
 }, false);
 //myclick.onclick = clickmybutton;
