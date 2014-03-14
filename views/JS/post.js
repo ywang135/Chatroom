@@ -52,23 +52,13 @@ function readMessage() {
 		    var content = request.responseText;
 			var data = JSON.parse(content);  
 			for(var i = 0; i < data.length; i++){
-				var display;
-				var image = data[i].user.profile_image_url;
-				if(image != "null"){
-					display = '<img src = ' + image +'/><strong>' + data[i].user.name + '</strong><br>' + data[i].text;
-				}
-				else{
-					display = '<img src = url: /"../img/no_photo.png /"/>' + image +'<strong>' + data[i].user.name + '</strong><br>' + data[i].text;
-				}
+				var display = '<strong>' + data.nickname + ": " + data.time +'</strong><br><p>' + data.body + '</p>';
+        
 				if(!feedSet.contains(data[i].id)){
-					feedSet.add(data[i].id);	
-					if(feedSet.size() > 50){
-						myStopFunction();
-						break;
-					}
+					feedSet.add(data[i].id);
 					var li = document.createElement('LI');
 					li.innerHTML = display;
-					var ul = document.getElementById('tweets');
+					var ul = document.getElementById('topic');
 					ul.insertBefore(li, ul.childNodes[0]);
 				}
 			}
