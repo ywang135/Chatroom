@@ -35,7 +35,7 @@ function StringSet() {
 }
 var feedSet = new StringSet();
 function appendingText() {
-  nIntervId = setInterval(readMessage, 5000);
+  nIntervId = setInterval(readMessage, 100);
 }
 function myStopFunction()
 {
@@ -73,9 +73,6 @@ function readMessage() {
 	}, false);
 	request.send(null);
 }
-window.addEventListener('load', function(){
-    appendingText();
-}, false);
 function sendMessage(e) {
     // prevent the page from redirecting
     e.preventDefault();
@@ -92,6 +89,7 @@ function sendMessage(e) {
     req.send(fd);
 }
 window.addEventListener('load', function(){
+    appendingText();
     var messageForm = document.getElementById('messageForm');
     messageForm.addEventListener('submit', sendMessage false);
 }, false);

@@ -26,7 +26,6 @@ app.get('/', function(request,response){
 	var sql = "SELECT DISTINCT roomname FROM messages WHERE time >= strftime('%s','now') - 300";
     var q = conn.query(sql);
     q.on('row', function(row){
-        console.log(row);
         html += '<a href="/'+row.roomname+'">'+row.roomname+'</a><br>';
     });
     q.on('end', function(row){
@@ -42,10 +41,8 @@ app.post('/',function(request,response){
 	var q = conn.query(sql, [name, 0], function(error,result) {
 		if(error){
 			name = generateRoomIdentifier();
-			console.log("hello!");
 		}
 		else{
-			console.log(name);
 			response.render('room.html', {roomName: name});
 		}
     });
@@ -73,7 +70,6 @@ app.post('/:roomName',function(request,response){
 	var sql = 'INSERT INTO users VALUES ($1)';
     var q = conn.query(sql,[nickname], function(error, result){
     	if(error){
-    		console.log("exist!");
             response.render('room.html', {roomName: roomName, error_info:"user name exist"});
     	}
     	else{
@@ -90,7 +86,6 @@ app.post('/:roomName/messages',function(request,response){
    	var message = request.body.message;
     var time = new Date();
     conn.query('INSERT INTO messages(roomname, nickname, body, time) VALUES ($1, $2, $3, $4)', [name, nickname, message, time]).on('error',console.error);	
-    console.log('made it!');
 
 });
 
@@ -107,7 +102,6 @@ app.get('/:roomName/messages.json', function(request, response){
             time: row.time
         };
         messages.push(temp);
-        console.log(messages[0].body);
     });
     q.on('end', function(){
       response.json(messages);
