@@ -41,10 +41,19 @@ function myStopFunction()
 {
 	clearInterval(nIntervId);
 }
+function meta(name) {
+    var tag = document.querySelector('meta[name=' + name + ']');
+    if (tag != null)
+        return tag.content;
+    return '';
+}
+
+var roomName = meta('roomName');
 function readMessage() {
+    console.log("there!");
 	var request = new XMLHttpRequest();
 	// specify the HTTP method, URL, and asynchronous flag
-	request.open('GET', '/' + meta('roomName') + '/messages.json', true);
+	request.open('POST', '/' + meta('roomName') + '/messages');
 	// add an event handler
 	request.addEventListener('load', function(e){
 		if (request.status == 200) {
@@ -52,6 +61,7 @@ function readMessage() {
 		    var content = request.responseText;
 			var data = JSON.parse(content);  
 			for(var i = 0; i < data.length; i++){
+                console.log("hello"+ data[i].body);
 				var display = '<strong>' + data.nickname + ": " + data.time +'</strong><br><p>' + data.body + '</p>';
         
 				if(!feedSet.contains(data[i].id)){
@@ -88,9 +98,11 @@ function sendMessage(e) {
     req.open('POST', '/' + meta('roomName') + '/messages', true);
     req.send(fd);
 }
+
 window.addEventListener('load', function(){
+    console.log("there!");
     appendingText();
     var messageForm = document.getElementById('messageForm');
-    messageForm.addEventListener('submit', sendMessage false);
+    messageForm.addEventListener('submit', sendMessage, false);
 }, false);
 //myclick.onclick = clickmybutton;

@@ -6,6 +6,8 @@ var engines = require('consolidate');
 app.engine('html', engines.hogan); // tell Express to run .html files through Hogan
 app.set('views', __dirname+ "/views"); // tell Express where to find templates
 
+app.use(express.static(__dirname));
+
 app.use(express.bodyParser());
 
 function generateRoomIdentifier() {
@@ -81,12 +83,29 @@ app.post('/:roomName',function(request,response){
 
 });
 app.post('/:roomName/messages',function(request,response){
+    console.log("- Post req received");
 	var name = request.params.roomName;   // 'ABC123'
    	var nickname = request.body.nickName; // 'Miley'
    	var message = request.body.message;
     var time = new Date();
     conn.query('INSERT INTO messages(roomname, nickname, body, time) VALUES ($1, $2, $3, $4)', [name, nickname, message, time]).on('error',console.error);	
+    //response.render('message.html', {roomName: request.params.roomName, nickName: nickname});
+    var sql = 'SELECT id, nickname, body, time FROM messages WHERE roomname=$1';
+    var q = conn.query(sql, [name]);
+    var messages = [];
+    q.on('row', function(row){
+        var temp = {
+            id: row.id,
+	        body: row.body,
+            nickname: row.nickname,
+            time: row.time
+        };
+        messages.push(temp);
+    });
+    q.on('end', function(){
+        response.json(messages);
 
+    });
 });
 
 app.get('/:roomName/messages.json', function(request, response){
@@ -104,7 +123,7 @@ app.get('/:roomName/messages.json', function(request, response){
         messages.push(temp);
     });
     q.on('end', function(){
-      response.json(messages);
+        response.json(messages);
 
     });
     /*var messages = [{nickname: 'Miley', body: 'It\'s our party we can do what we want'},{nickname: 'Miley', body: 'It\'s our party we can do what we want'}];
