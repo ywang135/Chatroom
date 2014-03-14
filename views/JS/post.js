@@ -44,7 +44,7 @@ function myStopFunction()
 function readMessage() {
 	var request = new XMLHttpRequest();
 	// specify the HTTP method, URL, and asynchronous flag
-	request.open('POST', '/' + meta('roomName') + '/messages', true);
+	request.open('GET', '/' + meta('roomName') + '/messages.json', true);
 	// add an event handler
 	request.addEventListener('load', function(e){
 		if (request.status == 200) {
@@ -73,13 +73,11 @@ function readMessage() {
 	}, false);
 	request.send(null);
 }
+/*window.addEventListener('load', function(){
+    appendingText();
+}, false);*/
 window.addEventListener('load', function(){
-    appendingText();
+    var messageForm = document.getElementById('messageForm');
+    messageForm.addEventListener('submit', appendingText, false);
 }, false);
-
-function clickmybutton(){
-	document.getElementById("tweets").innerHTML ='';
-	feedSet = new StringSet();
-    appendingText();
-}
 //myclick.onclick = clickmybutton;

@@ -80,17 +80,21 @@ app.post('/:roomName/messages',function(request,response){
 
 app.get('/:roomName/messages.json', function(request, response){
     var name = request.params.roomName;
-    var sql = 'SELECT nickname, body, time FROM messages WHERE roomname=$1';
+    var sql = 'SELECT id, nickname, body, time FROM messages WHERE roomname=$1';
     var q = conn.query(sql, [name]);
     var messages = [];
     q.on('row', function(row){
-        var temp;
-        temp.id = row.id;
-        temp.nickname = row.nickname;
-        temp.body = row.body;
-        temp.time = row.time;
+        var temp = {
+            id: row.id,
+	        body: row.body,
+            nickname: row.nickname,
+            time: row.time
+        };
         messages.push(temp);
+        console.log(messages[0].body);
     });
     response.json(messages);
+    /*var messages = [{nickname: 'Miley', body: 'It\'s our party we can do what we want'},{nickname: 'Miley', body: 'It\'s our party we can do what we want'}];
+    response.json(messages);*/
 });
 app.listen(8080);
