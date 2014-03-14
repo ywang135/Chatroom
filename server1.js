@@ -40,10 +40,10 @@ app.post('/:roomName',function(request,response){
     var q = conn.query(sql,[nickname], function(error, result){
     	if(error){
     		console.log("exist!");
-            response.render('room.html', {roomName: roomName, error_info:"user name exist"});
+            response.render('room.html', {roomName: request.params.roomName, error_info:"user name exist"});
     	}
     	else{
-            response.render('message.html', {roomName: roomName, nickName: nickname});
+            response.render('message.html', {roomName: request.params.roomName, nickName: nickname});
     	}
     });
 
