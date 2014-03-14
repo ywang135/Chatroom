@@ -89,7 +89,7 @@ function sendMessage(e) {
 
     // create a FormData object from our form
     var fd = new FormData();
-    fd.append('nickname', document.getElementById('nicknamefield').value);
+    fd.append('nickName', document.getElementById('nicknamefield').value);
     fd.append('message', document.getElementById('messagefield').value);
     // send it to the server
     var req = new XMLHttpRequest();

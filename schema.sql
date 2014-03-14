@@ -13,5 +13,7 @@ CREATE TABLE room (
 );
 
 CREATE TABLE users (
-	name TEXT PRIMARY KEY 
+	name TEXT PRIMARY KEY ,
+    roomname TEXT,
+    FOREIGN KEY(roomname) REFERENCES room (name)
 );

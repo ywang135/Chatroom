@@ -68,13 +68,16 @@ app.get('/:roomName',function(request,response){
 });
 app.post('/:roomName',function(request,response){
     var nickname = request.body.nickname;
+    
     var roomName = request.params.roomName;
-	var sql = 'INSERT INTO users VALUES ($1)';
-    var q = conn.query(sql,[nickname], function(error, result){
+	var sql = 'INSERT INTO users VALUES ($1, $2)';
+    var q = conn.query(sql,[nickname, roomName], function(error, result){
     	if(error){
+            console.log("if: "+nickname);
             response.render('room.html', {roomName: roomName, error_info:"user name exist"});
     	}
     	else{
+            console.log("else: "+nickname);
             var newsql = 'UPDATE room SET numofPeople=numofPeople+1 WHERE name = $1';
             var q1 = conn.query(newsql, [roomName]).on('error',console.error);
             response.render('message.html', {roomName: request.params.roomName, nickName: nickname});
@@ -83,10 +86,11 @@ app.post('/:roomName',function(request,response){
 
 });
 app.post('/:roomName/messages',function(request,response){
-	var name = request.params.roomName;   // 'ABC123'
-   	var nickname = request.body.nickName; // 'Miley'
+	var name = request.params.roomName;   
+   	var nickname = request.body.nickName; 
    	var message = request.body.message;
     var time = new Date();
+    console.log("messages: "+nickname);
     conn.query('INSERT INTO messages(roomname, nickname, body, time) VALUES ($1, $2, $3, $4)', [name, nickname, message, time]).on('error',console.error);	
     response.render('message.html', {roomName: request.params.roomName, nickName: nickname});
     
