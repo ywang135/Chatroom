@@ -27,10 +27,13 @@ app.get('/', function(request,response){
     var q = conn.query(sql);
     q.on('row', function(row){
         console.log(row);
-        html += '<a href="'+row.roomname+'">'+row.roomname+'</a>';
+        html += '<a href="/'+row.roomname+'">'+row.roomname+'</a><br>';
     });
-    html += '</body>\n' + '<html>\n';
-    response.write(html);
+    q.on('end', function(row){
+        html += '</body>\n' + '<html>\n';
+        response.write(html);
+    });
+    
 });
 app.post('/',function(request,response){
     
